@@ -9,12 +9,13 @@ import sys
 import json
 import logging
 import argparse
+import winreg
 import tkinter.messagebox
 
 import pyperclip
 from nextcloud import NextCloud
 from plyer import notification
-import winreg
+
 
 def add_rcm(rcm_path):
     prog_name = '上传至Nextcloud'

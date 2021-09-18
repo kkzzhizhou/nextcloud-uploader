@@ -21,4 +21,4 @@ scoop install nextcloud-uploader
     "password": "",
     "upload_path": ""
 }
-``` 
+```
