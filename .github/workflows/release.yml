@@ -23,9 +23,9 @@ jobs:
     - name: sha256sum
       run: |
         sha256sum nextcloud-uploader.zip | awk '{print $1}' > nextcloud-uploader.zip.sha256
-    - uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r nextcloud-uploader.zip dist/nextcloud-uploader.exe static/nextcloud-uploader.ico
+    - name: zip win artifact
+      run: |
+        powershell Compress-Archive -LiteralPath dist/nextcloud-uploader.exe,static/nextcloud-uploader.ico  -DestinationPath nextcloud-uploader.zip 
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
