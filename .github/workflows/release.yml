@@ -20,8 +20,14 @@ jobs:
     - name: build with pyinstaller
       run: |
         pyinstaller -F -w --uac-admin --version-file ./static/version-info.txt -i ./static/nextcloud-uploader.ico ./nextcloud-uploader.py --hidden-import plyer.platforms.win.notification
+    - name: package and calculate sha256
+      run: |
+        zip -r nextcloud-uploader.zip dist/nextcloud-uploader.exe static/nextcloud-uploader.ico
+        sha256sum nextcloud-uploader.zip | awk '{print $1}' > nextcloud-uploader.zip.sha256
     - name: Release
       uses: softprops/action-gh-release@v1
       if: startsWith(github.ref, 'refs/tags/')
       with:
-        files: dist/nextcloud-uploader.exe
+        files: |
+          nextcloud-uploader.zip
+          nextcloud-uploader.zip.sha256
