@@ -26,7 +26,7 @@ def add_rcm(rcm_path):
     winreg.SetValue(prog_key, 'command', winreg.REG_SZ, prog_path + ' -f "%1"')
     winreg.CloseKey(prog_key)
     winreg.CloseKey(key)
-    notification.notify(title = "",message = "注册右键成功",app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 3)
+    notification.notify(title = "",message = "注册右键成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
 
 def del_rcm(root,sub):
     try:
@@ -43,7 +43,7 @@ def del_rcm(root,sub):
            winreg.CloseKey(open_key)
     except Exception:
         logging.error("opening/closure failure")
-    notification.notify(title = "",message = "删除右键成功",app_icon = "%s/nextcloud_uploader.icon" % exe_path, app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 3)
+    notification.notify(title = "",message = "删除右键成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
 
 def kill_process():
     os.system("taskkill /im nextcloud-uploader.exe /f")
@@ -63,21 +63,21 @@ def upload_file(file):
             nxc = NextCloud(endpoint=NEXTCLOUD_URL, user=NEXTCLOUD_USERNAME, password=NEXTCLOUD_PASSWORD, json_output=to_js)
             filepath,filename = os.path.split(local_filepath)
             upload_filepath = '%s/%s' % (PATH,filename)
-            notification.notify(title = "",message = "上传中，请稍等...",app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 8)
+            notification.notify(title = "",message = "上传中，请稍等...",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 8)
             try:
                 logging.info('上传中：%s' % local_filepath)
                 nxc.upload_file(local_filepath,upload_filepath)
                 file_id = nxc.get_file('%s/%s' % (PATH,filename)).file_id
                 internal_link = "%s/f/%s" % (NEXTCLOUD_URL,file_id)
-                notification.notify(title = "",message = "上传成功",app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 3)
+                notification.notify(title = "",message = "上传成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
                 logging.info('上传成功：%s  内部链接：%s' % (local_filepath,internal_link))
                 pyperclip.copy(internal_link)
             except:
-                notification.notify(title = "",message = "上传失败，请检查日志。",app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 3)
+                notification.notify(title = "",message = "上传失败，请检查日志。",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
                 sys.exit(1)
     else:
         logging.info('参数填写不完整，请检查配置文件。')
-        notification.notify(title = "",message = "参数填写不完整，请检查配置文件。",app_icon = "%s/nextcloud_uploader.icon" % exe_path, timeout  = 3)
+        notification.notify(title = "",message = "参数填写不完整，请检查配置文件。",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
         sys.exit(1)
 
 def generate_config(exe_path):
