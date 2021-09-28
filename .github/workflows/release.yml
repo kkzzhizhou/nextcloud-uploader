@@ -20,9 +20,6 @@ jobs:
     - name: build with pyinstaller
       run: |
         pyinstaller -F -w --uac-admin --version-file ./static/version-info.txt -i ./static/nextcloud-uploader.ico ./nextcloud-uploader.py --hidden-import plyer.platforms.win.notification
-    - name: sha256sum
-      run: |
-        sha256sum nextcloud-uploader.zip | awk '{print $1}' > nextcloud-uploader.zip.sha256
     - name: zip win artifact
       run: |
         powershell Compress-Archive -LiteralPath dist/nextcloud-uploader.exe,static/nextcloud-uploader.ico  -DestinationPath nextcloud-uploader.zip 
@@ -32,4 +29,3 @@ jobs:
       with:
         files: |
           nextcloud-uploader.zip
-          nextcloud-uploader.zip.sha256
