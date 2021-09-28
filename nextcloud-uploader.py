@@ -60,7 +60,7 @@ def upload_file(file):
             nxc = NextCloud(endpoint=NEXTCLOUD_URL, user=NEXTCLOUD_USERNAME, password=NEXTCLOUD_PASSWORD, json_output=to_js)
             filepath,filename = os.path.split(local_filepath)
             upload_filepath = '%s/%s' % (PATH,filename)
-            notification.notify(title = "上传中",message = "请稍等...",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 8)
+            notification.notify(title = "上传中",message = "请稍等...",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 1)
             try:
                 logging.info('上传中：%s' % local_filepath)
                 nxc.upload_file(local_filepath,upload_filepath)
