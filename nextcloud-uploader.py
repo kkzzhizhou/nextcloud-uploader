@@ -26,7 +26,7 @@ def add_rcm(rcm_path):
     winreg.SetValue(prog_key, 'command', winreg.REG_SZ, prog_path + ' -f "%1"')
     winreg.CloseKey(prog_key)
     winreg.CloseKey(key)
-    notification.notify(title = "",message = "注册右键成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
+    notification.notify(title = "注册右键菜单成功",message = " ",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 3)
 
 def del_rcm(root,sub):
     try:
@@ -38,15 +38,12 @@ def del_rcm(root,sub):
         try:
            winreg.DeleteKey(open_key, '')
         except Exception:
-            logging.error("deletion failure")
+            logging.error("删除注册表键值失败")
         finally:
            winreg.CloseKey(open_key)
     except Exception:
         logging.error("opening/closure failure")
-    notification.notify(title = "",message = "删除右键成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
-
-def kill_process():
-    os.system("taskkill /im nextcloud-uploader.exe /f")
+    notification.notify(title = "删除右键菜单成功",message = " ", app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 3)
 
 def upload_file(file):
     local_filepath = file
@@ -63,21 +60,21 @@ def upload_file(file):
             nxc = NextCloud(endpoint=NEXTCLOUD_URL, user=NEXTCLOUD_USERNAME, password=NEXTCLOUD_PASSWORD, json_output=to_js)
             filepath,filename = os.path.split(local_filepath)
             upload_filepath = '%s/%s' % (PATH,filename)
-            notification.notify(title = "",message = "上传中，请稍等...",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 8)
+            notification.notify(title = "上传中",message = "请稍等...",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 8)
             try:
                 logging.info('上传中：%s' % local_filepath)
                 nxc.upload_file(local_filepath,upload_filepath)
                 file_id = nxc.get_file('%s/%s' % (PATH,filename)).file_id
                 internal_link = "%s/f/%s" % (NEXTCLOUD_URL,file_id)
-                notification.notify(title = "",message = "上传成功",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
+                notification.notify(title = "上传成功",message = "内部链接：%s" % internal_link,app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 3)
                 logging.info('上传成功：%s  内部链接：%s' % (local_filepath,internal_link))
                 pyperclip.copy(internal_link)
             except:
-                notification.notify(title = "",message = "上传失败，请检查日志。",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
+                notification.notify(title = "上传失败",message = "请查看日志文件了解详情",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 3)
                 sys.exit(1)
     else:
         logging.info('参数填写不完整，请检查配置文件。')
-        notification.notify(title = "",message = "参数填写不完整，请检查配置文件。",app_icon = "%s/nextcloud-uploader.ico" % exe_path, timeout  = 3)
+        notification.notify(title = "错误",message = "参数填写不完整，请检查配置文件",app_name = "Nextcloud Uploader", app_icon = "%s/nextcloud-uploader.ico" % exe_path , timeout  = 5)
         sys.exit(1)
 
 def generate_config(exe_path):
@@ -106,16 +103,14 @@ if __name__ == "__main__":
     parser.add_argument('-u', '--unassoc', help="删除右键菜单", action="store_true")
     parser.add_argument('-f', '--file', help="上传文件路径")
     args = parser.parse_args()
-    if args.init or hasattr(args,'help') or args.assoc or args.unassoc or args.file:
+    if args.init or args.assoc or args.unassoc or args.file:
         if args.init:
             logging.info("生成配置文件")
             generate_config(exe_path)
         if args.assoc:
-            kill_process()
             logging.info("添加右键菜单")
             add_rcm(rcm_path)
         if args.unassoc:
-            kill_process()
             logging.info("删除右键菜单")
             del_rcm(winreg.HKEY_CLASSES_ROOT,"*\\shell\\%s" % rcm_path)
         if args.file:
@@ -125,5 +120,5 @@ if __name__ == "__main__":
         root = tkinter.Tk()
         root.withdraw()
         tkinter.messagebox.showinfo('使用帮助', 
-            '该程序仅支持命令行\n%s -i 生成配置文件\n%s -a 安装右键菜单\n%s -a 删除右键菜单\n%s -f FILE 上传文件'
+            '该程序仅支持命令行\n%s -i 生成配置文件\n%s -a 安装右键菜单\n%s -u 删除右键菜单\n%s -f FILE 上传文件'
             %(app_name,app_name,app_name,app_name))
